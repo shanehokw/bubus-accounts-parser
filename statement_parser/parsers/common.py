@@ -10,6 +10,7 @@ _NOISE = [
     re.compile(r"^[A-Z]{0,6}\d{6,}[A-Z]?$"),  # e.g. QR12345678, 123456789Q, MBBQR1234567, 123456789012
     re.compile(r"^[\d\s]{8,}$"),
     re.compile(r"^(?=(?:\D*\d){10})\S+$"),  # one 'word' with 10+ digits, e.g. 123456789012345V100
+    re.compile(r"^(?=\S*\d)(?=\S*-)\S{12,}$"),  # long codes with dashes: SA-CR-AB12CD34-EF56, UUIDs
 ]
 
 
@@ -26,7 +27,8 @@ def join_description(lines: list) -> str:
     kept = []
     for line in lines:
         line = clean_line(line)
-        if line and not is_noise(line) and line.upper() not in (k.upper() for k in kept):
+        # Skip repeats, including shortened repeats ('ACME TRADING SDN B' after 'ACME TRADING SDN BHD').
+        if line and not is_noise(line) and not any(k.upper().startswith(line.upper()) for k in kept):
             kept.append(line)
     return " | ".join(kept)
 

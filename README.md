@@ -26,6 +26,7 @@ Close the Terminal window to stop it.
 | HSBC Savings (Amanah) | HSBC | macOS OCR (text is stored as images) | Running balance and closing balance |
 | HSBC Credit Card | HSBC | macOS OCR | Previous balance + transactions = statement balance |
 | SC Credit Card | SC CC | PDF text | Previous balance + transactions = new balance |
+| RHB Savings | RHB | PDF text | Running balance and C/F balance |
 | TNG eWallet | TNG | PDF text | Wallet balance after every transaction |
 
 Not yet supported: Grab (needs a sample statement).

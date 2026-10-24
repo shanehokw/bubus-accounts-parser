@@ -64,10 +64,11 @@ def is_picture(path: Path, password: str = "") -> bool:
         return image_area > 0.5 * page.width * page.height
 
 
-def page_lines(path: Path, password: str = "") -> list:
-    """The PDF's own text, as a list of lines per page."""
+def page_lines(path: Path, password: str = "", x_tolerance: float = 3) -> list:
+    """The PDF's own text, as a list of lines per page. Lower x_tolerance for PDFs whose
+    letters sit close together, so words don't run into each other."""
     with open_pdf(path, password) as pdf:
-        return [(page.extract_text() or "").splitlines() for page in pdf.pages]
+        return [(page.extract_text(x_tolerance=x_tolerance) or "").splitlines() for page in pdf.pages]
 
 
 def text_rows(path: Path, password: str = "") -> list:

@@ -1,12 +1,12 @@
 from pathlib import Path
 
 from ..pdf_text import first_page_text, is_picture, ocr_rows, text_rows
-from . import hsbc_cc, hsbc_savings, maybank_cc, maybank_savings, sc_cc, tng
+from . import hsbc_cc, hsbc_savings, maybank_cc, maybank_savings, rhb_savings, sc_cc, tng
 from .common import sentence_case
 
 # Checked in order; Maybank savings is checked before the card because the card's
 # first page does not say "ACCOUNT TRANSACTIONS".
-_TEXT_PARSERS = [maybank_savings, maybank_cc, sc_cc]
+_TEXT_PARSERS = [maybank_savings, maybank_cc, sc_cc, rhb_savings]
 _ROW_PARSERS = [tng, hsbc_savings, hsbc_cc]
 
 
@@ -38,5 +38,5 @@ def _parse(path: Path, password: str):
         )
     raise ValueError(
         "Unrecognised statement. Supported: Maybank Savings, Maybank Credit Card, "
-        "HSBC Savings, HSBC Credit Card, SC Credit Card, TNG eWallet."
+        "HSBC Savings, HSBC Credit Card, SC Credit Card, RHB Savings, TNG eWallet."
     )

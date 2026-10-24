@@ -12,7 +12,7 @@ from statement_parser import PasswordRequired, parse_statement
 from statement_parser import rules as rules_store
 from statement_parser.excel import to_xlsx
 
-ACCOUNTS = ["HSBC", "Cash", "Maybank", "Grab", "TNG", "SC CC"]
+ACCOUNTS = ["HSBC", "Cash", "Maybank", "Grab", "TNG", "SC CC", "RHB"]
 CATEGORY_OPTIONS = rules_store.CATEGORIES + rules_store.SPECIAL_CATEGORIES
 COLUMNS = ["date", "month", "settled", "account", "value", "category", "type", "description", "key"]
 
@@ -83,7 +83,7 @@ st.title("Statements to Excel")
 st.caption("Everything runs on this Mac. Nothing is uploaded to the internet.")
 
 uploads = st.file_uploader(
-    "Upload statement PDFs (Maybank, HSBC, SC, TNG)", type="pdf", accept_multiple_files=True,
+    "Upload statement PDFs (Maybank, HSBC, SC, RHB, TNG)", type="pdf", accept_multiple_files=True,
     key=f"uploader_{state.uploader}",
 )
 
