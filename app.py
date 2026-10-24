@@ -69,11 +69,12 @@ def rebuild_table(file_ids: tuple, edited: pd.DataFrame):
     state.table, state.table_files = table, file_ids
 
 
-def learn_and_save(pairs):
+def learn_and_save(pairs, downloaded: bool):
     rules = rules_store.load()
     changed = rules_store.learn(pairs, rules)
     rules_store.save(rules)
-    state.message = f"Excel file downloaded. {changed} category rule(s) added or updated."
+    state.message = ("Excel file downloaded. " if downloaded else "") + \
+        f"{changed} category rule(s) added or updated."
 
 
 # ---------------------------------------------------------------- page
@@ -82,7 +83,7 @@ st.title("Statements to Excel")
 st.caption("Everything runs on this Mac. Nothing is uploaded to the internet.")
 
 uploads = st.file_uploader(
-    "Upload statement PDFs (Maybank, HSBC, TNG)", type="pdf", accept_multiple_files=True,
+    "Upload statement PDFs (Maybank, HSBC, SC, TNG)", type="pdf", accept_multiple_files=True,
     key=f"uploader_{state.uploader}",
 )
 
@@ -131,7 +132,7 @@ if not len(state.table) and not ready:
 
 st.subheader("Transactions")
 st.caption("Edit any cell. Add rows (e.g. Cash) with the + at the bottom; delete rows by selecting them "
-           "and pressing Delete. Categories you pick are remembered for next time when you download.")
+           "and pressing Delete. Categories you pick are remembered when you click Save rules or Download Excel.")
 
 edited = st.data_editor(
     state.table,
@@ -174,14 +175,17 @@ rows = [
 ]
 pairs = [(r.get("key"), r["category"]) for r in rows if isinstance(r.get("key"), str)]
 
-col1, col2 = st.columns([1, 3])
+col1, col2, col3 = st.columns([1, 1, 3])
 with col1:
     st.download_button(
         "⬇️ Download Excel", data=to_xlsx(rows), file_name=f"statements_{date.today():%Y-%m-%d}.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        type="primary", on_click=learn_and_save, args=(pairs,),
+        type="primary", on_click=learn_and_save, args=(pairs, True), width="stretch",
     )
 with col2:
+    st.button("💾 Save rules", on_click=learn_and_save, args=(pairs, False), width="stretch",
+              help="Remember the categories picked in the table, without downloading")
+with col3:
     note = f"{len(rows)} rows."
     if skipped:
         note += f" {skipped} row(s) without a date, account or value will be left out."
@@ -212,7 +216,7 @@ with st.expander("Category rules"):
                                                          required=True),
         },
     )
-    if st.button("Save rules"):
+    if st.button("Save rule list"):
         cleaned = {r["text"].strip(): r["category"] for r in new_rules.dropna().to_dict("records")
                    if r["text"].strip()}
         rules_store.save(cleaned)

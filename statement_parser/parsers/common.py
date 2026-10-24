@@ -31,6 +31,17 @@ def join_description(lines: list) -> str:
     return " | ".join(kept)
 
 
+def sentence_case(text: str) -> str:
+    """'SHELL - SEA PARK PJ | DUITNOW QR' -> 'Shell - sea park pj | Duitnow qr'.
+    Each ' | ' part starts with a capital; currency codes like '(3.66 USD)' stay upper case."""
+    parts = []
+    for part in text.split(" | "):
+        part = part.lower()
+        part = re.sub(r"\(([\d,.]+) ([a-z]{3})\)", lambda m: f"({m.group(1)} {m.group(2).upper()})", part)
+        parts.append(part[:1].upper() + part[1:])
+    return " | ".join(parts)
+
+
 def month_number(text: str) -> int:
     """'OCT', 'Oct', '0CT' (OCR) -> 10."""
     return MONTHS[text.upper().replace("0", "O")[:3]]

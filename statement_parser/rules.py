@@ -9,6 +9,7 @@ CATEGORIES = [
     "Housing", "Transportation", "Utility", "Grocery", "Drinks and Restaurants", "Clothing",
     "Medical", "Subscription", "Insurance", "Household", "Personal", "Education", "Gifts",
     "Entertainment", "Vacation", "Other expense", "Freelance subscriptions", "Dad",
+    "Salary", "Other income", "Investment",
 ]
 # Set by hand or by the app only; never learned as rules.
 SPECIAL_CATEGORIES = ["Starting Balance", "Exclude"]
@@ -43,8 +44,8 @@ def learn(pairs, rules: dict) -> int:
     changed = 0
     for key, category in pairs:
         key = (key or "").strip()
-        if not key or category not in CATEGORIES:
-            continue
+        if not key or category not in CATEGORIES or guess(key, "", rules) == category:
+            continue  # nothing to learn, or an existing rule already gives this category
         existing = next((k for k in rules if k.upper() == key.upper()), None)
         if existing is None or rules[existing] != category:
             rules.pop(existing, None)

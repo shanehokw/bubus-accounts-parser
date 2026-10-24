@@ -56,6 +56,14 @@ def first_page_text(path: Path, password: str = "") -> str:
         return (page.extract_text() or "") if len(page.chars) > 20 else ""
 
 
+def is_picture(path: Path, password: str = "") -> bool:
+    """True when the first page is mostly one image, e.g. a statement printed from an email preview."""
+    with open_pdf(path, password) as pdf:
+        page = pdf.pages[0]
+        image_area = sum(i["width"] * i["height"] for i in page.images)
+        return image_area > 0.5 * page.width * page.height
+
+
 def page_lines(path: Path, password: str = "") -> list:
     """The PDF's own text, as a list of lines per page."""
     with open_pdf(path, password) as pdf:

@@ -15,7 +15,7 @@ Close the Terminal window to stop it.
 1. Drop in one or more PDFs.
 2. Check each file's balance check (✅ / ⚠️).
 3. Edit the table: categories, TYPE, Exclude, descriptions. Add Cash rows with the **+** under the table.
-4. Click **Download Excel**. Categories you picked are saved as rules for next time.
+4. Click **Download Excel**. Categories you picked are saved as rules for next time (or click **Save rules** to save them without downloading).
 
 ## Supported statements
 
@@ -25,9 +25,10 @@ Close the Terminal window to stop it.
 | Maybank Credit Card | Maybank | PDF text | Previous balance + transactions = statement balance |
 | HSBC Savings (Amanah) | HSBC | macOS OCR (text is stored as images) | Running balance and closing balance |
 | HSBC Credit Card | HSBC | macOS OCR | Previous balance + transactions = statement balance |
+| SC Credit Card | SC CC | PDF text | Previous balance + transactions = new balance |
 | TNG eWallet | TNG | PDF text | Wallet balance after every transaction |
 
-Not yet supported: SC CC, Grab (needs sample statements).
+Not yet supported: Grab (needs a sample statement).
 
 ## Rules applied
 
