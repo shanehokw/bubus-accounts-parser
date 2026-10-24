@@ -1,0 +1,17 @@
+# Real bank statements: personal data
+Statement Samples/
+
+# Learned category rules: include names of people you pay
+category_rules.json
+
+# Python and libraries installed in this folder (reinstall: see README)
+.venv/
+.python/
+.tools/
+__pycache__/
+
+# Compiled OCR helper; rebuilt automatically from pdf_ocr.swift
+statement_parser/ocr/pdf_ocr
+
+# macOS
+.DS_Store

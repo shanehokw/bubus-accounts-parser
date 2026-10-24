@@ -1,0 +1,13 @@
+[browser]
+# Never send usage statistics.
+gatherUsageStats = false
+
+[server]
+# Only reachable from this Mac.
+address = "127.0.0.1"
+port = 8501
+# Don't watch the code for changes (avoids a "install Watchdog" notice).
+fileWatcherType = "none"
+
+[client]
+toolbarMode = "minimal"
