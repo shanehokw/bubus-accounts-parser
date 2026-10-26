@@ -13,7 +13,7 @@ _TRAILING_REF = re.compile(r"(MMF)?\d{6,}$")
 _LONG_NUMBER = re.compile(r"\d{15,}")  # reference numbers that spill into the description
 
 # Transaction types (spaces removed, upper case) → direction. Matched by prefix, longest first.
-SKIPPED = ["RELOAD", "GO+DAILYEARNINGS"]
+SKIPPED = ["RELOAD", "GO+DAILYEARNINGS", "EWALLETCASHOUT", "GO+CASHIN", "CASHBACK"]
 MONEY_IN = [
     "RELOAD", "RECEIVEFROMWALLET", "DUITNOW_RECEIVEFROM", "MONEYPACKETRECEIVED", "MONEY_PACKET_REFUND",
     "CASHBACK", "PAYMENTCANCELLED", "TRANSIT_PASS_REFUND", "GO+CASHIN", "REFUND",

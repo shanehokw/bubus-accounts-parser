@@ -7,7 +7,8 @@ from .common import clean_line, close, is_noise, join_description, money, month_
 
 ACCOUNT = "HSBC"
 
-_DATE = re.compile(r"^(\d{1,2})([A-Za-z0]{3})(\d{4})\s*(.*)$")
+# Day is always two digits; the month's 3rd letter may come back from OCR as 1 or | (Jul).
+_DATE = re.compile(r"^(\d{2})([A-Za-z0]{2}[A-Za-z0|1])(\d{4})\s*(.*)$")
 _AMOUNT = re.compile(r"^\d[\d,.]*\.\d{2}$")
 _STATEMENT_DATE = re.compile(r"Statement Date\s+(\d{1,2})([A-Za-z0]{3})(\d{4})")
 _ACCOUNT_NUMBER = re.compile(r"^\d{8,}$")

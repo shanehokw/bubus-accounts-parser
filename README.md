@@ -27,6 +27,7 @@ Close the Terminal window to stop it.
 | HSBC Credit Card | HSBC | macOS OCR | Previous balance + transactions = statement balance |
 | SC Credit Card | SC CC | PDF text | Previous balance + transactions = new balance |
 | RHB Savings | RHB | PDF text | Running balance and C/F balance |
+| Ryt Savings (Main Account) | Ryt | PDF text | Running balance and closing balance |
 | TNG eWallet | TNG | PDF text | Wallet balance after every transaction |
 
 Not yet supported: Grab (needs a sample statement).
@@ -36,8 +37,7 @@ Not yet supported: Grab (needs a sample statement).
 - VALUE: money out is negative, shown as `(55.13)` in Excel.
 - SETTLED: FALSE. TYPE: empty.
 - Starting balances: not added as rows (still used for the balance check).
-- Skipped: credit card cash rebates; TNG reloads and GO+ daily interest.
-- Kept: TNG GO+ Cash In and eWallet Cash Out (they cancel each other out).
+- Skipped: credit card cash rebates; TNG reloads, GO+ daily interest, eWallet Cash Out, GO+ Cash In and Cashback; Ryt daily interest and "From Ryt Pocket" moves.
 - DESCRIPTION: the statement's remarks, with reference numbers removed.
 
 ## Category rules
