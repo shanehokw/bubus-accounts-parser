@@ -13,6 +13,8 @@ CATEGORIES = [
 ]
 # Set by hand or by the app only; never learned as rules.
 SPECIAL_CATEGORIES = ["Starting Balance", "Exclude"]
+# Categories a rule can give, when added in the rules editor.
+RULE_CATEGORIES = CATEGORIES + ["Exclude"]
 
 
 def load() -> dict:

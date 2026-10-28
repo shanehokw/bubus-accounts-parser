@@ -45,7 +45,8 @@ Not yet supported: Grab (needs a sample statement).
 Stored in `category_rules.json`: `"text in description": "Category"`. A rule applies when its text
 appears in a transaction (spaces and upper/lower case ignored); the longest match wins. Edit the
 file in any text editor, or use **Category rules** at the bottom of the app. `Exclude` and
-`Starting Balance` are never learned as rules.
+`Starting Balance` are never learned from the table; you can add an `Exclude` rule by hand in
+**Category rules**.
 
 ## Files
 

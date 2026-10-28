@@ -14,7 +14,7 @@ from statement_parser.excel import to_xlsx
 
 ACCOUNTS = ["HSBC", "Cash", "Maybank", "Grab", "TNG", "SC CC", "RHB", "Ryt"]
 CATEGORY_OPTIONS = rules_store.CATEGORIES + rules_store.SPECIAL_CATEGORIES
-COLUMNS = ["date", "month", "settled", "account", "value", "category", "type", "description", "key"]
+COLUMNS = ["date", "month", "settled", "account", "value", "category", "type", "description", "source", "key"]
 
 st.set_page_config(page_title="Statements to Excel", page_icon="📄", layout="wide")
 state = st.session_state
@@ -48,7 +48,8 @@ def rows_for(file_id: str, rules: dict) -> list:
             "date": t.date, "month": t.date.strftime("%B"), "settled": t.settled,
             "account": t.account, "value": t.value,
             "category": t.category or rules_store.guess(t.key, t.description, rules),
-            "type": t.type, "description": t.description, "key": t.key, "file": file_id,
+            "type": t.type, "description": t.description, "source": state.parsed[file_id]["name"],
+            "key": t.key, "file": file_id,
         })
     return rows
 
@@ -75,6 +76,46 @@ def learn_and_save(pairs, downloaded: bool):
     rules_store.save(rules)
     state.message = ("Excel file downloaded. " if downloaded else "") + \
         f"{changed} category rule(s) added or updated."
+    state.ask_apply = not downloaded and changed > 0
+
+
+def rule_changes(table: pd.DataFrame, rules: dict) -> list:
+    """Rows whose category the rules would change: (row index, new category, row was blank)."""
+    changes = []
+    for i, r in table.iterrows():
+        current = r["category"] if isinstance(r["category"], str) else ""
+        if current == "Starting Balance":
+            continue
+        text = lambda col: r[col] if isinstance(r.get(col), str) else ""
+        new = rules_store.guess(text("key"), text("description"), rules)
+        if new and new != current:
+            changes.append((i, new, current == ""))
+    return changes
+
+
+@st.dialog("Update categories in the table?")
+def ask_apply_rules(changes: list):
+    blank = sum(1 for c in changes if c[2])
+    st.write(f"The rules give a different category for **{len(changes)}** row(s) in the table:")
+    st.markdown(f"- {blank} row(s) with no category\n- {len(changes) - blank} row(s) with a different "
+                "category already set")
+    c1, c2, c3 = st.columns(3)
+    if c1.button("Update all", type="primary", width="stretch"):
+        apply_rule_changes(changes)
+    if c2.button("Only empty ones", width="stretch", disabled=blank == 0):
+        apply_rule_changes([c for c in changes if c[2]])
+    if c3.button("No", width="stretch"):
+        st.rerun()
+
+
+def apply_rule_changes(changes: list):
+    table = state.edited.copy()
+    for i, category, _ in changes:
+        table.at[i, "category"] = category
+    state.table = table
+    state.editor_version += 1
+    state.message = f"Updated the category of {len(changes)} row(s)."
+    st.rerun()
 
 
 # ---------------------------------------------------------------- page
@@ -141,7 +182,8 @@ edited = st.data_editor(
     width="stretch",
     height=600,
     hide_index=True,
-    column_order=["date", "month", "settled", "account", "value", "category", "type", "description"],
+    column_order=["date", "month", "settled", "account", "value", "category", "type", "description",
+                  "source"],
     column_config={
         "date": st.column_config.DateColumn("DATE", format="DD/MM/YYYY", required=True),
         "month": st.column_config.TextColumn("MONTH", disabled=True, help="Follows DATE"),
@@ -152,6 +194,8 @@ edited = st.data_editor(
         "category": st.column_config.SelectboxColumn("CATEGORY", options=CATEGORY_OPTIONS),
         "type": st.column_config.TextColumn("TYPE"),
         "description": st.column_config.TextColumn("DESCRIPTION", width="large"),
+        "source": st.column_config.TextColumn("SOURCE", disabled=True,
+                                              help="The file this row came from. Not written to Excel."),
     },
 )
 state.edited = edited
@@ -212,7 +256,7 @@ with st.expander("Category rules"):
         rules_df, num_rows="dynamic", hide_index=True, width="stretch", key="rules_editor",
         column_config={
             "text": st.column_config.TextColumn("Text in description", required=True),
-            "category": st.column_config.SelectboxColumn("Category", options=rules_store.CATEGORIES,
+            "category": st.column_config.SelectboxColumn("Category", options=rules_store.RULE_CATEGORIES,
                                                          required=True),
         },
     )
@@ -221,3 +265,10 @@ with st.expander("Category rules"):
                    if r["text"].strip()}
         rules_store.save(cleaned)
         st.success(f"Saved {len(cleaned)} rule(s). New uploads will use them.")
+        state.ask_apply = True
+
+# After the rules change, offer to re-apply them to the table.
+if state.pop("ask_apply", False):
+    changes = rule_changes(state.edited, rules_store.load())
+    if changes:
+        ask_apply_rules(changes)

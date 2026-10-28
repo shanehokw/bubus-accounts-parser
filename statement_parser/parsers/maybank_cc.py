@@ -17,7 +17,8 @@ _INSTALMENT = re.compile(r"\s*:\d{3}/\d{3}$")
 
 
 def matches(first_page: str) -> bool:
-    return "Malayan Banking" in first_page and "CREDIT CARD" in first_page
+    is_maybank = "Malayan Banking" in first_page or "Maybank Islamic" in first_page
+    return is_maybank and "CREDIT CARD" in first_page
 
 
 def _signed(amount: str, cr: str) -> float:

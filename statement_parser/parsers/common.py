@@ -12,6 +12,8 @@ _NOISE = [
     re.compile(r"^[\d\s]{8,}$"),
     re.compile(r"^(?=(?:\D*\d){10})\S+$"),  # one 'word' with 10+ digits, e.g. 123456789012345V100
     re.compile(r"^(?=\S*\d)(?=\S*-)\S{12,}$"),  # long codes with dashes: SA-CR-AB12CD34-EF56, UUIDs
+    re.compile(r"^(?=(?:\D*\d){5})[A-Za-z0-9]{12,}$"),  # long letter-and-digit codes: 01ABCD2E3F4G56
+    re.compile(r"^\d{1,3}$"),  # stray short numbers, e.g. a lone "00"
 ]
 
 

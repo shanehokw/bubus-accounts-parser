@@ -12,7 +12,9 @@ _AMOUNT_AFTER = r"\s*:?\s*([\d,]+\.\d{2})"
 
 
 def matches(first_page: str) -> bool:
-    return "Malayan Banking" in first_page and "ACCOUNT TRANSACTIONS" in first_page
+    # Conventional (Malayan Banking Berhad) and Islamic (Maybank Islamic Berhad) share a layout.
+    is_maybank = "Malayan Banking" in first_page or "Maybank Islamic" in first_page
+    return is_maybank and "ACCOUNT TRANSACTIONS" in first_page
 
 
 def parse(path, password="") -> Statement:
