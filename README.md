@@ -9,8 +9,19 @@ Runs entirely on this Mac. Nothing is sent to the internet.
 
 ## Start
 
-Double-click `run.command`. The app opens in your browser at http://127.0.0.1:8501.
-Close the Terminal window to stop it.
+**Without Terminal:** run `./make_shortcut.sh` once. It builds two apps in `Shortcuts/`; drag them
+to the Desktop or Dock.
+
+| App | What it does |
+|---|---|
+| Statements to Excel | Starts the app in the background if needed, then opens it in your browser |
+| Stop Statements to Excel | Stops the app |
+
+Log: `~/Library/Logs/statements-to-excel.log`. Run `./make_shortcut.sh` again if this folder moves.
+
+**With Terminal:** double-click `run.command`. Close the Terminal window to stop it.
+
+Either way the app opens at http://127.0.0.1:8501.
 
 1. Drop in one or more PDFs.
 2. Check each file's balance check (✅ / ⚠️).

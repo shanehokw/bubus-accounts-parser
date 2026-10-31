@@ -15,3 +15,6 @@ statement_parser/ocr/pdf_ocr
 
 # macOS
 .DS_Store
+
+# Built by make_shortcut.sh; contains this folder's path
+Shortcuts/
